@@ -10,7 +10,9 @@ const userSchema = new Schema({
         unique: true,
         lowercase: true,
         trim: true,
-        index: true
+        index: true,
+        minLength: 5,
+        maxLength: 15
     },
     email: {
         type: String,
@@ -23,7 +25,9 @@ const userSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        index: true
+        index: true,
+        minLength: 5,
+        maxLength: 15
     },
     avatar: {
         type: String, // Cloudinary url
@@ -88,4 +92,5 @@ userSchema.methods.generateRefreshToken = function () {
     )
 }
 
-export default User = mongoose.model("User", userSchema)
+const User = mongoose.model("User", userSchema)
+export default User
