@@ -74,15 +74,10 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     // Fetching the incoming refresh token
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
-    if (!incomingRefreshToken) {
-        throw new ApiError(401, "unauthorized request")
-    }
+    if (!incomingRefreshToken) throw new ApiError(401, "unauthorized request");
 
     try {
-        const decodedToken = jwt.verify(
-            incomingRefreshToken,
-            process.env.REFRESH_TOKEN_SECRET
-        )
+        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
     
         const user = await User.findById(decodedToken?._id)
     
@@ -114,9 +109,6 @@ const registerUser = asyncHandler( async (req, res) => {
     if ([fullname, email, username, password].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required!")       
     }
-
-    // console.log("Received files:", req.files);
-    // console.log("Request body:", req.body);
 
 
     // check if user alreadt exists: email, username
