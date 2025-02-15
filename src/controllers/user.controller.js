@@ -282,14 +282,16 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 const getWatchHistory = asyncHandler(async (req, res) => {
     const user = await User.aggregate([
         {
-            $match: { _id: new mongoose.Types.ObjectId(req.user?._id)}
+            $match: {
+                _id: new mongoose.Types.ObjectId(req.user._id)
+            }
         },
         {
             $lookup: {
-                form: "videos",
+                from: "videos",
                 localField: "watchHistory",
                 foreignField: "_id",
-                as: "watchedHistory",
+                as: "watchHistory",
                 pipeline: [
                     {
                         $lookup: {
@@ -299,15 +301,18 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                             as: "owner",
                             pipeline: [
                                 {
-                                    $project: { fullname: 1, username: 1, avatar: 1 }
+                                    $project: {
+                                        fullname: 1,
+                                        username: 1,
+                                        avatar: 1
+                                    }
                                 }
                             ]
                         }
                     },
-                    // For fetching the first value of the result Array (for frontend ease)
                     {
-                        $addFields: {
-                            owner: {
+                        $addFields:{
+                            owner:{
                                 $first: "$owner"
                             }
                         }
